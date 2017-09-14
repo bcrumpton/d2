@@ -1,4 +1,5 @@
 import keys from './config';
+import createEmblemElements from './createEmblemElements';
 
 export default function () {
   const apiKey = keys.apiKey;
@@ -17,8 +18,7 @@ export default function () {
     })
     .then(res => res.json())
     .then((data) => {
-      const characterEmblem = document.querySelector('.character');
-      characterEmblem.src = 'https://www.bungie.net' + data.Response.character.data.emblemBackgroundPath;
+      createEmblemElements(data);
     });
   }
 
