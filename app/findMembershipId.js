@@ -3,15 +3,27 @@ import keys from './config';
 export default function () {
   const apiKey = keys.apiKey;
   const playerForm = document.querySelector('.player-form');
-  // const membershipType = 1;
   const displayName = document.getElementById('displayName');
   let memberId;
 
 
-  const totalTimePlayed = document.querySelector('.total-time-played');
+  function getCharacter(character) {
+    fetch(`https://www.bungie.net/Platform/Destiny2/1/Profile/${memberId}/Character/${character}/?components=200`, {
+      method: 'GET',
+      headers: {
+        'Content-type': 'application/json',
+        'X-API-Key': apiKey
+      }
+    })
+    .then(res => res.json())
+    .then((data) => {
+      const characterEmblem = document.querySelector('.character');
+      characterEmblem.src = 'https://www.bungie.net' + data.Response.character.data.emblemPath;
+    });
+  }
 
-  function getBaseStats() {
-    fetch(`https://www.bungie.net/Platform/Destiny2/1/Account/${memberId}/Stats/`, {
+  function getProfile() {
+    fetch(`https://www.bungie.net/Platform/Destiny2/1/Profile/${memberId}/?components=100`, {
       method: 'GET',
       headers: {
         'Content-type': 'application/json',
@@ -20,8 +32,9 @@ export default function () {
     })
     .then(response => response.json())
     .then((data) => {
-      totalTimePlayed.innerHTML =
-      data.Response.mergedAllCharacters.merged.allTime.secondsPlayed.basic.displayValue;
+      data.Response.profile.data.characterIds.forEach((character) => {
+        getCharacter(character);
+      });
     });
   }
 
@@ -37,7 +50,7 @@ export default function () {
     .then(response => response.json())
     .then((data) => {
       memberId = data.Response[0].membershipId;
-      getBaseStats(memberId);
+      getProfile(memberId);
     });
   }
 
