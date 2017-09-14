@@ -18,7 +18,7 @@ export default function () {
     .then(res => res.json())
     .then((data) => {
       const characterEmblem = document.querySelector('.character');
-      characterEmblem.src = 'https://www.bungie.net' + data.Response.character.data.emblemPath;
+      characterEmblem.src = 'https://www.bungie.net' + data.Response.character.data.emblemBackgroundPath;
     });
   }
 
